@@ -1,0 +1,74 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: invoices-svc
+  name: invoices-svc
+  namespace: pruebaembassador
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: invoices-svc
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        run: invoices-svc
+    spec:
+      containers:
+      - image: dockerthrafik/invoices_svc:v1
+        imagePullPolicy: IfNotPresent
+        name: invoices-svc
+        ports:
+        - containerPort: 8080
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: invoices-svc
+  name: invoices-svc
+  namespace: pruebaembassador
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: invoices-svc
+  sessionAffinity: None
+  type: ClusterIP
+
+# kubectl delete -f invoices_svc.yaml
+
+
+# kubectl apply -f invoices_svc.yaml
+# kubectl apply -f invoices_svc.yaml  --namespace=pruebaembassador
+
+# kubectl get services 
+# kubectl get services  --namespace=pruebaembassador
+
+
+# kubectl get pods  --namespace=pruebaembassador
+
+
+# kubectl get services --namespace=pruebaembassador
+# NAME           TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+# invoices-svc   ClusterIP   10.110.89.92   <none>        80/TCP    13m
+
+
+# usar en CLUSTER-IP del servicio
+# curl 10.110.89.92/api/invoices/1
+
+
+
+
+
