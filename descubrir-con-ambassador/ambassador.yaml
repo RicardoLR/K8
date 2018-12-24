@@ -48,14 +48,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ambassador
-  namespace: pruebaembassador
+  namespace: tstdesc
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: ambassador
 spec:
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
@@ -112,4 +112,17 @@ spec:
 
 
 
-# kubectl apply -f ambassador.yaml
+# kubectl delete -f ambassador.yaml
+# kubectl apply -f ambassador.yaml  --namespace=tstdesc
+
+
+# Despues de lanzar mi servicio ambassador
+
+# minikube service ambassador --url
+
+# -- con namespace
+#  minikube service ambassador --url  --namespace=tstdesc
+#     http://192.168.99.100:30244kubectl get services
+
+# curl http://192.168.99.100:30244/invoices/42
+
